@@ -1,16 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, Image, Platform } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, Button, Image, SafeAreaView } from 'react-native';
 import DocumentScanner from 'react-native-document-scanner-plugin';
 
 export default function App() {
   const [scannedImage, setScannedImage] = useState();
 
   const scanDocument = async () => {
-    // prompt user to verify permissions if needed, but plugin usually handles this.
     try {
-      const { scannedImages } = await DocumentScanner.scanDocument({
-        // maxNumDocuments: 1
-      });
+      const { scannedImages } = await DocumentScanner.scanDocument();
       if (scannedImages.length > 0) {
         setScannedImage(scannedImages[0]);
       }
@@ -20,16 +17,19 @@ export default function App() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.header}>Document Scanner</Text>
+      
       {scannedImage && (
         <Image
           resizeMode="contain"
-          style={{ width: '100%', height: 300, marginBottom: 20 }}
+          style={{ width: '100%', height: 400, marginBottom: 20 }}
           source={{ uri: scannedImage }}
         />
       )}
+      
       <Button title="Scan Document" onPress={scanDocument} />
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -39,5 +39,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 20
   },
+  header: {
+    fontSize: 24,
+    marginBottom: 40,
+    fontWeight: 'bold'
+  }
 });
